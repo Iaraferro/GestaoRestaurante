@@ -5,8 +5,12 @@ namespace GestaoRestaurante.Models
     {
        public required string Nome { get; set; }
        public required string Descricao { get; set; }
-       public required double Preco { get; set; }
-       public required string Periodo { get; set; } // Almoço ou Jantar
+       public required decimal Preco { get; set; }
+       public required PeriodoCardapio Periodo { get; set; }
+       public string? ImagemUrl { get; set; }
+
+        public List<ItemIngrediente> Ingrediente { get; set; } = new();
+      
        
     }
 }

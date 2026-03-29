@@ -1,4 +1,4 @@
-namespace GestaoRestaurante.Models
+﻿namespace GestaoRestaurante.Models
 {
     public class ErrorViewModel
     {
