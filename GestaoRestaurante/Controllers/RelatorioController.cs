@@ -33,7 +33,13 @@ namespace GestaoRestaurante.Controllers
                 .GroupBy(p => p.Atendimento.GetType().Name)
                 .Select(g => new
                 {
-                    TipoAtendimento = g.Key,
+                    TipoAtendimento = g.Key switch
+                    {
+                        "AtendimentoPresencial" => "Salão (Presencial)",
+                        "AtendimentoDeliveryProprio" => "Delivery Próprio",
+                        "AtendimentoDeliveryApp" => "iFood / Apps",
+                        _ => g.Key
+                    },
                     TotalPedidos = g.Count(),
                     Faturamento = g.Sum(p => p.TotalFinal)
                 })
@@ -44,8 +50,20 @@ namespace GestaoRestaurante.Controllers
 
         [HttpGet("itens-mais-vendidos")]
         [EndpointSummary("Lista os itens mais vendidos com e sem desconto")]
-        public async Task<IActionResult> ItensMaisVendidos()
+        public async Task<IActionResult> ItensMaisVendidos([FromQuery] DateTime? dataInicio = null,
+    [FromQuery] DateTime? dataFim = null)
         {
+            var query = _context.ItensPedido
+            .Include(ip => ip.ItemCardapio)
+            .Include(ip => ip.Pedido)
+            .Where(ip => ip.Pedido.Status != StatusPedido.Cancelado)
+            .AsQueryable();
+
+            if (dataInicio.HasValue)
+                query = query.Where(ip => ip.Pedido.DataHoraPedido >= dataInicio.Value);
+
+            if (dataFim.HasValue)
+                query = query.Where(ip => ip.Pedido.DataHoraPedido <= dataFim.Value);
             var itens = await _context.ItensPedido
                 .Include(ip => ip.ItemCardapio)
                 .Include(ip => ip.Pedido)
@@ -66,6 +84,7 @@ namespace GestaoRestaurante.Controllers
                 })
                 .OrderByDescending(i => i.TotalVendido)
                 .ToListAsync();
+
 
             return Ok(itens);
         }

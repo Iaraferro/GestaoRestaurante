@@ -19,8 +19,13 @@ namespace GestaoRestaurante.Controllers
 
         [HttpGet]
         [EndpointSummary("Lista todos os itens do cardápio")]
-        public async Task<IActionResult> ListarTodos()
+        public async Task<IActionResult> ListarTodos([FromQuery] PeriodoCardapio? periodo = null)
         {
+            var query = _context.ItemCardapios.AsQueryable();
+
+            if (periodo.HasValue)
+                query = query.Where(i => i.Periodo == periodo.Value)
+                    ;
             var itens = await _context.ItemCardapios
                 .Select(i => new ItemCardapioResponseDTO(
                     i.Id,
@@ -35,6 +40,8 @@ namespace GestaoRestaurante.Controllers
             return Ok(itens);
         }
 
+        
+        
         [HttpGet("{id}")]
         [EndpointSummary("Busca um item do cardápio pelo ID")]
         public async Task<IActionResult> BuscarPorId(int id)

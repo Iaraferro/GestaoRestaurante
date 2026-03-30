@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace GestaoRestaurante.Controllers
 {
     [ApiController]
-    [Route("api[controller]")]
+    [Route("api/[controller]")]
     public class IngredienteController: ControllerBase
     {
         private readonly RestauranteContext _context;

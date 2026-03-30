@@ -69,6 +69,17 @@ using (var scope = app.Services.CreateScope())
         });
         context.SaveChanges();
     }
+    if (!context.Mesas.Any())
+    {
+        context.Mesas.AddRange(
+            new Mesa { Numero = 1, Capacidade = 2 },
+            new Mesa { Numero = 2, Capacidade = 4 },
+            new Mesa { Numero = 3, Capacidade = 4 },
+            new Mesa { Numero = 4, Capacidade = 6 },
+            new Mesa { Numero = 5, Capacidade = 8 }
+        );
+        context.SaveChanges();
+    }
     if (!context.ItemCardapios.Any())
     {
         context.ItemCardapios.AddRange(
@@ -116,7 +127,8 @@ using (var scope = app.Services.CreateScope())
             new ItemCardapio { Nome = "Robalo com Farofa de Dendê", Descricao = "Filé de robalo grelhado na folha de bananeira com farofa de dendê, vinagrete de tomate e pimenta cambuci", Preco = 132.00m, Periodo = PeriodoCardapio.Jantar, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now },
             new ItemCardapio { Nome = "Tábua Alma Nativa", Descricao = "Seleção de carnes curadas, queijos brasileiros artesanais, conservas da estação, pães de fermentação natural e geleias", Preco = 88.00m, Periodo = PeriodoCardapio.Jantar, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now }
         );
-        context.SaveChanges();
+     
+            context.SaveChanges();
     }
 }
 
@@ -130,8 +142,8 @@ if (app.Environment.IsDevelopment())
 }
 
 
-    
-    
+
+
 
 app.UseCors();
 app.UseRouting();

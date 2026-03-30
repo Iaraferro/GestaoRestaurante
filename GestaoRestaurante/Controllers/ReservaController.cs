@@ -36,6 +36,29 @@ namespace GestaoRestaurante.Controllers
             return Ok(reservas);
         }
 
+        [HttpGet("usuario/{usuarioId}")]
+        [EndpointSummary("Lista as reservas de um usuário")]
+        public async Task<IActionResult> ListarPorUsuario(int usuarioId)
+        {
+            var usuario = await _context.Usuarios.FindAsync(usuarioId);
+            if (usuario == null)
+                return NotFound("Usuário não encontrado.");
+
+            var reservas = await _context.Reservas
+                .Where(r => r.UsuarioId == usuarioId)
+                .Include(r => r.Mesa)
+                .OrderByDescending(r => r.DataHora)
+                .Select(r => new ReservaResponseDTO(
+                    r.Id,
+                    r.DataHora,
+                    r.MesaId,
+                    r.CodigoConfirmacao
+                ))
+                .ToListAsync();
+
+            return Ok(reservas);
+        }
+
         [HttpGet("{id}")]
         [EndpointSummary("Busca uma reserva pelo ID")]
         public async Task<IActionResult> BuscarPorId(int id)
