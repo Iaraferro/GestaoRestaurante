@@ -82,11 +82,11 @@ namespace GestaoRestaurante.Controllers
         }
 
         [HttpPost]
-        [EndpointSummary("Cria uma nova reserva para o jantar")]
+        [EndpointSummary("Cria uma nova reserva para o almoço")]
         public async Task<IActionResult> CriarReserva(ReservaRequestDTO dto)
         {
-            // Valida se o horário está dentro da janela permitida (19h-22h)
-            if (dto.DataHora.Hour < 19 || dto.DataHora.Hour >= 22)
+            // Valida se o horário está dentro da janela permitida (11h-14h)
+            if (dto.DataHora.Hour < 11 || dto.DataHora.Hour >= 14)
                 return BadRequest("Reservas só podem ser feitas entre 19h e 22h.");
 
             // Valida se a reserva é feita com pelo menos 1 dia de antecedência

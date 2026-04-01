@@ -72,11 +72,11 @@ using (var scope = app.Services.CreateScope())
     if (!context.Mesas.Any())
     {
         context.Mesas.AddRange(
-            new Mesa { Numero = 1, Capacidade = 2 },
-            new Mesa { Numero = 2, Capacidade = 4 },
-            new Mesa { Numero = 3, Capacidade = 4 },
-            new Mesa { Numero = 4, Capacidade = 6 },
-            new Mesa { Numero = 5, Capacidade = 8 }
+            new Mesa { Numero = 1, Capacidade = 2, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now },
+            new Mesa { Numero = 2, Capacidade = 4, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now },
+            new Mesa { Numero = 3, Capacidade = 4, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now },
+            new Mesa { Numero = 4, Capacidade = 6, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now },
+            new Mesa { Numero = 5, Capacidade = 8, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now }
         );
         context.SaveChanges();
     }
