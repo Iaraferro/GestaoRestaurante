@@ -32,6 +32,9 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<RestauranteContext>();
+    
+    // ⭐ APLICAR MIGRATIONS AUTOMATICAMENTE
+    context.Database.Migrate();
 
     if (!context.Atendimentos.Any())
     {
@@ -69,6 +72,7 @@ using (var scope = app.Services.CreateScope())
         });
         context.SaveChanges();
     }
+    
     if (!context.Mesas.Any())
     {
         context.Mesas.AddRange(
@@ -80,10 +84,11 @@ using (var scope = app.Services.CreateScope())
         );
         context.SaveChanges();
     }
+    
     if (!context.ItemCardapios.Any())
     {
         context.ItemCardapios.AddRange(
-            // Almoço
+            // ☀️ ALMOÇO (20 itens) - Periodo = 0
             new ItemCardapio { Nome = "Caldo de Cana Consommé", Descricao = "Consommé de caldo de cana com capim-limão, gengibre e espuma de coco fresco", Preco = 38.00m, Periodo = PeriodoCardapio.Almoco, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now },
             new ItemCardapio { Nome = "Pirarucu ao Tucupi Negro", Descricao = "Filé de pirarucu selado com crosta de castanha, tucupi negro reduzido e jambu fresco", Preco = 89.00m, Periodo = PeriodoCardapio.Almoco, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now },
             new ItemCardapio { Nome = "Risoto de Queijo Canastra", Descricao = "Risoto mantecato com queijo Canastra curado 6 meses, lascas de carne seca e crocante de mandioca", Preco = 78.00m, Periodo = PeriodoCardapio.Almoco, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now },
@@ -105,7 +110,7 @@ using (var scope = app.Services.CreateScope())
             new ItemCardapio { Nome = "Robalo ao Leite de Castanha", Descricao = "Filé de robalo pochê em leite de castanha do Pará com purê de banana da terra e vinagrete de tucupi", Preco = 90.00m, Periodo = PeriodoCardapio.Almoco, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now },
             new ItemCardapio { Nome = "Duo de Queijos Brasileiros", Descricao = "Seleção de queijos Canastra, Coalho e Minas Padrão com geleia de goiaba artesanal, mel e castanhas", Preco = 55.00m, Periodo = PeriodoCardapio.Almoco, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now },
 
-            // Jantar
+            // 🌙 JANTAR (20 itens) - Periodo = 1
             new ItemCardapio { Nome = "Tartar de Atum com Açaí", Descricao = "Tartar de atum fresco com creme de açaí, ovas de peixe, chips de tapioca e azeite de ervas nativas", Preco = 72.00m, Periodo = PeriodoCardapio.Jantar, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now },
             new ItemCardapio { Nome = "Lagosta ao Molho de Maracujá", Descricao = "Lagosta inteira grelhada na manteiga noisette com molho agridoce de maracujá do cerrado e purê de mandioca", Preco = 185.00m, Periodo = PeriodoCardapio.Jantar, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now },
             new ItemCardapio { Nome = "Filé Mignon ao Molho de Cachaça", Descricao = "Filé mignon maturado 45 dias flambado na cachaça artesanal com molho de jabuticaba e batata suflê", Preco = 145.00m, Periodo = PeriodoCardapio.Jantar, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now },
@@ -128,12 +133,14 @@ using (var scope = app.Services.CreateScope())
             new ItemCardapio { Nome = "Tábua Alma Nativa", Descricao = "Seleção de carnes curadas, queijos brasileiros artesanais, conservas da estação, pães de fermentação natural e geleias", Preco = 88.00m, Periodo = PeriodoCardapio.Jantar, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now }
         );
      
-            context.SaveChanges();
+        context.SaveChanges();
+        
+        // ⭐ LOG PARA CONFIRMAÇÃO
+        Console.WriteLine($"✅ Seed concluído! Total de itens: {context.ItemCardapios.Count()}");
+        Console.WriteLine($"   - Almoço: {context.ItemCardapios.Count(i => i.Periodo == PeriodoCardapio.Almoco)}");
+        Console.WriteLine($"   - Jantar: {context.ItemCardapios.Count(i => i.Periodo == PeriodoCardapio.Jantar)}");
     }
 }
-
-
-
 
 if (app.Environment.IsDevelopment())
 {
@@ -141,14 +148,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-
-
-
-
 app.UseCors();
 app.UseRouting();
 app.UseAuthorization();
 app.MapControllers();
-
 
 app.Run();
