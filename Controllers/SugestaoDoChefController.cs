@@ -3,6 +3,7 @@ using GestaoRestaurante.DTO;
 using GestaoRestaurante.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GestaoRestaurante.Controllers
 {
@@ -56,6 +57,7 @@ namespace GestaoRestaurante.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Administrador")] 
         [EndpointSummary("Define a sugestão do chefe do dia")]
         public async Task<IActionResult> CriarSugestao(SugestaoDoChefeRequestDTO dto)
         {

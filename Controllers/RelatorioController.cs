@@ -2,11 +2,13 @@
 using GestaoRestaurante.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GestaoRestaurante.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize(Roles = "Administrador")] 
     public class RelatorioController: ControllerBase
     {
         private readonly RestauranteContext _context;

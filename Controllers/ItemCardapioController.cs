@@ -101,7 +101,8 @@ namespace GestaoRestaurante.Controllers
                 Nome = dto.Nome,
                 Descricao = dto.Descricao,
                 Preco = dto.Preco,
-                Periodo = dto.Periodo
+                Periodo = dto.Periodo,
+                ImagemUrl = dto.ImagemUrl
             };
 
             _context.ItemCardapios.Add(item);
@@ -132,6 +133,8 @@ namespace GestaoRestaurante.Controllers
             item.Descricao = dto.Descricao;
             item.Preco = dto.Preco;
             item.Periodo = dto.Periodo;
+            item.ImagemUrl = dto.ImagemUrl;
+
 
             await _context.SaveChangesAsync();
 

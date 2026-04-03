@@ -3,11 +3,13 @@ using GestaoRestaurante.DTO;
 using GestaoRestaurante.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace GestaoRestaurante.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/[controller]")]
     public class ReservaController : ControllerBase
     {
