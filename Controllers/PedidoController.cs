@@ -18,7 +18,6 @@ namespace GestaoRestaurante.Controllers
         {
             _context = context;
         }
-       
 
         [HttpGet]
         [EndpointSummary("Lista todos os pedidos")]
@@ -26,19 +25,32 @@ namespace GestaoRestaurante.Controllers
         {
             var pedidos = await _context.Pedidos
                 .Include(p => p.Itens)
+                    .ThenInclude(i => i.ItemCardapio)
                 .Include(p => p.Atendimento)
-                .Select(p => new PedidoResponseDTO(
-                    p.Id,
-                    p.DataHoraPedido,
-                    p.Status,
-                    p.Periodo,
-                    p.TotalItens,
-                    p.TaxaAtendimento,
-                    p.TotalFinal
-                ))
                 .ToListAsync();
 
-            return Ok(pedidos);
+            var response = pedidos.Select(p => new PedidoResponseDTO(
+                p.Id,
+                p.DataHoraPedido,
+                p.Status,
+                p.Periodo,
+                p.TotalItens,
+                p.TaxaAtendimento,
+                p.TotalFinal,
+                p.Itens.Select(i => new ItemPedidoResponseDTO(
+                    i.Id,
+                    i.ItemCardapioId,
+                    i.ItemCardapio.Nome,
+                    i.ItemCardapio.ImagemUrl,
+                    i.Quantidade,
+                    i.PrecoMomento,
+                    i.DescontoAplicado,
+                    i.TotalItem,
+                    i.Observacao
+                )).ToList()
+            )).ToList();
+
+            return Ok(response);
         }
 
         [HttpGet("{id}")]
@@ -47,6 +59,7 @@ namespace GestaoRestaurante.Controllers
         {
             var pedido = await _context.Pedidos
                 .Include(p => p.Itens)
+                    .ThenInclude(i => i.ItemCardapio)
                 .Include(p => p.Atendimento)
                 .FirstOrDefaultAsync(p => p.Id == id);
 
@@ -60,8 +73,55 @@ namespace GestaoRestaurante.Controllers
                 pedido.Periodo,
                 pedido.TotalItens,
                 pedido.TaxaAtendimento,
-                pedido.TotalFinal
+                pedido.TotalFinal,
+                pedido.Itens.Select(i => new ItemPedidoResponseDTO(
+                    i.Id,
+                    i.ItemCardapioId,
+                    i.ItemCardapio.Nome,
+                    i.ItemCardapio.ImagemUrl,
+                    i.Quantidade,
+                    i.PrecoMomento,
+                    i.DescontoAplicado,
+                    i.TotalItem,
+                    i.Observacao
+                )).ToList()
             );
+
+            return Ok(response);
+        }
+
+        [HttpGet("usuario/{usuarioId}")]
+        [EndpointSummary("Lista os pedidos de um usuário")]
+        public async Task<IActionResult> ListarPorUsuario(int usuarioId)
+        {
+            var pedidos = await _context.Pedidos
+                .Where(p => p.UsuarioId == usuarioId)
+                .Include(p => p.Itens)
+                    .ThenInclude(i => i.ItemCardapio)
+                .Include(p => p.Atendimento)
+                .OrderByDescending(p => p.DataHoraPedido)
+                .ToListAsync();
+
+            var response = pedidos.Select(p => new PedidoResponseDTO(
+                p.Id,
+                p.DataHoraPedido,
+                p.Status,
+                p.Periodo,
+                p.TotalItens,
+                p.TaxaAtendimento,
+                p.TotalFinal,
+                p.Itens.Select(i => new ItemPedidoResponseDTO(
+                    i.Id,
+                    i.ItemCardapioId,
+                    i.ItemCardapio.Nome,
+                    i.ItemCardapio.ImagemUrl,
+                    i.Quantidade,
+                    i.PrecoMomento,
+                    i.DescontoAplicado,
+                    i.TotalItem,
+                    i.Observacao
+                )).ToList()
+            )).ToList();
 
             return Ok(response);
         }
@@ -138,6 +198,13 @@ namespace GestaoRestaurante.Controllers
             _context.Pedidos.Add(pedido);
             await _context.SaveChangesAsync();
 
+            // Recarrega com o Include para ter o nome/imagem de cada item
+            await _context.Entry(pedido)
+                .Collection(p => p.Itens)
+                .Query()
+                .Include(i => i.ItemCardapio)
+                .LoadAsync();
+
             var response = new PedidoResponseDTO(
                 pedido.Id,
                 pedido.DataHoraPedido,
@@ -145,7 +212,18 @@ namespace GestaoRestaurante.Controllers
                 pedido.Periodo,
                 pedido.TotalItens,
                 pedido.TaxaAtendimento,
-                pedido.TotalFinal
+                pedido.TotalFinal,
+                pedido.Itens.Select(i => new ItemPedidoResponseDTO(
+                    i.Id,
+                    i.ItemCardapioId,
+                    i.ItemCardapio.Nome,
+                    i.ItemCardapio.ImagemUrl,
+                    i.Quantidade,
+                    i.PrecoMomento,
+                    i.DescontoAplicado,
+                    i.TotalItem,
+                    i.Observacao
+                )).ToList()
             );
 
             return CreatedAtAction(nameof(BuscarPorId), new { id = pedido.Id }, response);

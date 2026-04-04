@@ -25,9 +25,13 @@ namespace GestaoRestaurante.Controllers
                 return NotFound("Pedido não encontrado.");
 
             var itens = await _context.ItensPedido
+                .Include(ip => ip.ItemCardapio) // ← NOVO: Traz os dados do prato
                 .Where(ip => ip.PedidoId == pedidoId)
                 .Select(ip => new ItemPedidoResponseDTO(
                     ip.Id,
+                    ip.ItemCardapioId,           // ← NOVO
+                    ip.ItemCardapio.Nome,        // ← NOVO
+                    ip.ItemCardapio.ImagemUrl,   // ← NOVO
                     ip.Quantidade,
                     ip.PrecoMomento,
                     ip.DescontoAplicado,
@@ -43,13 +47,18 @@ namespace GestaoRestaurante.Controllers
         [EndpointSummary("Busca um item de pedido pelo ID")]
         public async Task<IActionResult> BuscarPorId(int id)
         {
-            var item = await _context.ItensPedido.FindAsync(id);
+            var item = await _context.ItensPedido
+                .Include(ip => ip.ItemCardapio) // ← NOVO: Traz os dados do prato
+                .FirstOrDefaultAsync(ip => ip.Id == id);
 
             if (item == null)
                 return NotFound("Item do pedido não encontrado.");
 
             var response = new ItemPedidoResponseDTO(
                 item.Id,
+                item.ItemCardapioId,           // ← NOVO
+                item.ItemCardapio.Nome,        // ← NOVO
+                item.ItemCardapio.ImagemUrl,   // ← NOVO
                 item.Quantidade,
                 item.PrecoMomento,
                 item.DescontoAplicado,

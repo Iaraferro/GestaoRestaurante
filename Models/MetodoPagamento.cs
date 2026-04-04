@@ -5,6 +5,7 @@
         Dinheiro,
         CartaoDebito,
         CartaoCredito,
-        Pix
+        Pix,
+        PagarEntrega
     }
 }
