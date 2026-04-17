@@ -21,6 +21,7 @@ namespace GestaoRestaurante.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            
             // Herança de Atendimento
             modelBuilder.Entity<Atendimento>()
                 .HasDiscriminator<string>("TipoAtendimento")
@@ -88,6 +89,9 @@ namespace GestaoRestaurante.Data
             modelBuilder.Entity<SugestaoDoChefe>()
                 .Property(s => s.PercentualDesconto)
                 .HasPrecision(10, 2);
+                
+            // ✅ ADICIONE ESTA LINHA NO FINAL:
+            SeedIngredientes.Seed(modelBuilder);
         }
     }
 }

@@ -1,12 +1,13 @@
 ﻿namespace GestaoRestaurante.DTO
 {
     public record EnderecoRequestDTO(
-        int UsuarioId,
         string Rua,
         int Numero,
+        string? Complemento,
         string Bairro,
         string Cidade,
-        string Estado
-        );
-    
+        string Estado,
+        string Cep,
+        int UsuarioId
+    );
 }

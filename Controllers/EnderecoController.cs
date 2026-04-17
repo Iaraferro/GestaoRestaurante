@@ -31,9 +31,11 @@ namespace GestaoRestaurante.Controllers
                     e.Id,
                     e.Rua,
                     e.Numero,
+                    e.Complemento, // Adicionado
                     e.Bairro,
                     e.Cidade,
-                    e.Estado
+                    e.Estado,
+                    e.Cep          // Adicionado
                 ))
                 .ToListAsync();
 
@@ -53,9 +55,11 @@ namespace GestaoRestaurante.Controllers
                 endereco.Id,
                 endereco.Rua,
                 endereco.Numero,
+                endereco.Complemento, // Adicionado
                 endereco.Bairro,
                 endereco.Cidade,
-                endereco.Estado
+                endereco.Estado,
+                endereco.Cep          // Adicionado
             );
 
             return Ok(response);
@@ -63,7 +67,7 @@ namespace GestaoRestaurante.Controllers
 
         [HttpPost]
         [EndpointSummary("Cadastra um novo endereço para o usuário")]
-        public async Task<IActionResult> Cadastrar(int usuarioId, EnderecoRequestDTO dto)
+        public async Task<IActionResult> Cadastrar(EnderecoRequestDTO dto)
         {
             var usuario = await _context.Usuarios.FindAsync(dto.UsuarioId);
             if (usuario == null)
@@ -73,9 +77,11 @@ namespace GestaoRestaurante.Controllers
             {
                 Rua = dto.Rua,
                 Numero = dto.Numero,
+                Complemento = dto.Complemento, // Adicionado
                 Bairro = dto.Bairro,
                 Cidade = dto.Cidade,
                 Estado = dto.Estado,
+                Cep = dto.Cep,                  // Adicionado (Resolve o erro CS9035)
                 UsuarioId = dto.UsuarioId
             };
 
@@ -86,9 +92,11 @@ namespace GestaoRestaurante.Controllers
                 endereco.Id,
                 endereco.Rua,
                 endereco.Numero,
+                endereco.Complemento,
                 endereco.Bairro,
                 endereco.Cidade,
-                endereco.Estado
+                endereco.Estado,
+                endereco.Cep
             );
 
             return CreatedAtAction(nameof(BuscarPorId), new { id = endereco.Id }, response);
@@ -105,9 +113,11 @@ namespace GestaoRestaurante.Controllers
 
             endereco.Rua = dto.Rua;
             endereco.Numero = dto.Numero;
+            endereco.Complemento = dto.Complemento; // Adicionado
             endereco.Bairro = dto.Bairro;
             endereco.Cidade = dto.Cidade;
             endereco.Estado = dto.Estado;
+            endereco.Cep = dto.Cep;                 // Adicionado
 
             await _context.SaveChangesAsync();
 

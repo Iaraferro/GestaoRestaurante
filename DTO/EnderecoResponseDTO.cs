@@ -4,9 +4,10 @@
         int Id,
         string Rua,
         int Numero,
+        string? Complemento,
         string Bairro,
         string Cidade,
-        string Estado
-        );
-    
+        string Estado,
+        string Cep
+    );
 }
