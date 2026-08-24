@@ -125,8 +125,6 @@ GestaoRestaurante/
 □ Implementar autenticação com JWT para proteger endpoints.
 □ Separar a lógica de negócio em uma camada de Services.
 □ Adicionar testes unitários com xUnit.
-□ Criar um front-end em Angular para consumir a API.
 □ Adicionar logs com Serilog para monitoramento.
-Iara Martins Ferro
 GitHub | LinkedIn
 Estudante de Sistemas de Informação – UNITINS
