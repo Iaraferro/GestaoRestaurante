@@ -1,95 +1,94 @@
-# GestaoRestaurante
-markdown
-# 🍽️ GestaoRestaurante API
+# GestaoRestaurante API
 
-API REST para gerenciamento completo de restaurante, desenvolvida em **ASP.NET Core 10** com **Entity Framework Core**, **SQL Server** e **BCrypt** para segurança de senhas. O sistema contempla cardápio, pedidos, reservas, mesas, ingredientes, usuários, relatórios e sugestões do chefe.
+API REST para gerenciamento de restaurante, desenvolvida em ASP.NET Core 10 com Entity Framework Core, SQL Server e BCrypt para hash de senhas. O sistema gerencia cardápio, pedidos, reservas, mesas, ingredientes, usuários e relatórios.
 
 ---
 
-## ✨ Funcionalidades Principais
+## Funcionalidades
 
-- **👤 Usuários**: Cadastro, login com hash de senha (BCrypt), perfis (Usuário/Administrador).
-- **📋 Cardápio**: CRUD de itens com nome, descrição, preço, período (Almoço/Jantar) e imagem. Limite de **20 itens por período**.
-- **🧾 Pedidos**: Criação de pedidos com múltiplos itens, cálculo automático de:
-  - Desconto de **20%** se o item for a **Sugestão do Chefe** do dia.
-  - Taxas de atendimento (Presencial = 0%, Delivery Próprio = taxa fixa, Delivery App = 4% ou 6%).
-  - Total final com itens + taxa.
-- **🍽️ Reservas**: Agendamento de mesas com código de confirmação único (8 dígitos). Validação de horário (11h-14h) e antecedência mínima de 1 dia.
-- **🥩 Ingredientes**: Cadastro com estoque, unidade de medida, alerta de alergênicos e vínculo com itens do cardápio.
-- **⭐ Sugestões do Chefe**: Define o prato do dia (com 20% de desconto) para cada período.
-- **📊 Relatórios**: Faturamento por tipo de atendimento e lista dos itens mais vendidos (com e sem desconto).
-- **📦 Seed de Dados**: Já vem com usuário admin, mesas, 40 itens de cardápio e tipos de atendimento pré-cadastrados.
+- Usuários: cadastro, login com hash de senha (BCrypt) e perfis (Usuário/Administrador).
+- Cardápio: CRUD de itens com nome, descrição, preço, período (Almoço/Jantar) e imagem. Limite de 20 itens por período.
+- Pedidos: criação com múltiplos itens, cálculo automático de desconto de 20% para sugestão do chefe, taxas por tipo de atendimento (Presencial, Delivery Próprio, Delivery App) e total final.
+- Reservas: agendamento de mesas com código de confirmação único de 8 dígitos, validação de horário (11h às 14h) e antecedência mínima de 1 dia.
+- Ingredientes: cadastro com estoque, unidade de medida, alerta de alergênicos e vínculo com itens do cardápio.
+- Sugestões do Chefe: define o prato do dia com 20% de desconto para cada período.
+- Relatórios: faturamento por tipo de atendimento e lista dos itens mais vendidos (com e sem desconto).
+- Seed de dados: usuário admin, mesas, 40 itens de cardápio e tipos de atendimento pré-cadastrados.
 
 ---
 
-## 🛠️ Tecnologias Utilizadas
+## Tecnologias
 
-| Tecnologia | Descrição |
-| :--- | :--- |
-| **.NET 10** | Framework principal |
-| **ASP.NET Core** | Criação de APIs REST |
-| **Entity Framework Core** | ORM para acesso a dados (Code-First) |
-| **SQL Server** | Banco de dados relacional |
-| **BCrypt.Net-Next** | Hash de senhas |
-| **Swagger / OpenAPI** | Documentação interativa da API |
-| **CORS** | Liberação para consumo de front-ends |
+- .NET 10
+- ASP.NET Core
+- Entity Framework Core (Code-First)
+- SQL Server
+- BCrypt.Net-Next
+- Swagger / OpenAPI
 
 ---
 
-## 🚀 Como Executar o Projeto
+## Como executar
 
-### 1. Pré-requisitos
-- [.NET 10 SDK](https://dotnet.microsoft.com/download)
-- [SQL Server](https://www.microsoft.com/pt-br/sql-server/sql-server-downloads) (ou SQL Server Express / LocalDB)
-- [Git](https://git-scm.com/)
+**Pré-requisitos**
 
-### 2. Clonar o repositório
+- .NET 10 SDK
+- SQL Server (ou SQL Server Express / LocalDB)
+- Git
+
+**Clonar o repositório**
+
 ```bash
 git clone https://github.com/Iaraferro/GestaoRestaurante.git
 cd GestaoRestaurante
-3. Configurar a string de conexão
-No arquivo appsettings.json, ajuste a conexão com seu SQL Server:
+Configurar a string de conexão
+
+No arquivo appsettings.json, ajuste a conexão:
 
 json
 "ConnectionStrings": {
-  "DefaultConnection": "Server=localhost;Database=RestauranteDB;User Id=sa;Password=SuaSenha;TrustServerCertificate=True;"
+  "DefaultConnection": "Server=localhost;Database=RestauranteDB;User Id=seu_usuario;Password=sua_senha;TrustServerCertificate=True;"
 }
-4. Aplicar as migrações (criar o banco de dados)
+Aplicar as migrações
+
 bash
 dotnet ef database update
-5. Executar a aplicação
+Executar a aplicação
+
 bash
 dotnet run
 A API estará disponível em:
 
-http://localhost:5203 (HTTP)
+HTTP: http://localhost:5203
 
-https://localhost:7021 (HTTPS)
+HTTPS: https://localhost:7021
 
-6. Acessar a documentação Swagger
+Acessar a documentação Swagger
+
 Abra no navegador: http://localhost:5203/swagger
 
-🧪 Dados de Teste (Seed)
+Dados de teste (Seed)
 Ao executar o projeto pela primeira vez, o sistema cria automaticamente:
 
 Usuário administrador: admin / admin123
 
-3 tipos de atendimento: Presencial, Delivery Próprio (taxa R$5,00), Delivery App
+3 tipos de atendimento: Presencial, Delivery Próprio (taxa fixa R$ 5,00), Delivery App
 
-5 mesas com capacidades variadas (2 a 8 lugares)
+5 mesas com capacidades de 2 a 8 lugares
 
-40 itens de cardápio (20 para Almoço, 20 para Jantar) com preços e descrições
+40 itens de cardápio (20 para Almoço e 20 para Jantar)
 
-📌 Exemplos de Endpoints
+Exemplos de endpoints
 Método	Endpoint	Descrição
 POST	/api/usuario/cadastrar	Cadastra um novo usuário
-POST	/api/usuario/login	Realiza login (retorna dados do usuário)
-GET	/api/cardapio	Lista todos os itens do cardápio (filtra por período com ?periodo=Almoco)
-POST	/api/pedido	Cria um novo pedido (com itens, descontos e taxas)
+POST	/api/usuario/login	Realiza login
+GET	/api/cardapio	Lista itens do cardápio (filtro por período)
+POST	/api/pedido	Cria um novo pedido
 GET	/api/reserva/mesas-disponiveis?data=2026-08-25	Lista mesas disponíveis para uma data
-GET	/api/relatorio/faturamento?dataInicio=2026-08-01&dataFim=2026-08-31	Faturamento por tipo de atendimento
-GET	/api/relatorio/itens-mais-vendidos	Itens mais vendidos (com filtro de data opcional)
-📂 Estrutura do Projeto
+GET	/api/relatorio/faturamento	Faturamento por tipo de atendimento em um período
+GET	/api/relatorio/itens-mais-vendidos	Itens mais vendidos
+
+Estrutura do Projeto
 text
 GestaoRestaurante/
 ├── Controllers/          # Endpoints da API
@@ -121,7 +120,8 @@ GestaoRestaurante/
 │   └── RestauranteContext.cs
 ├── Program.cs            # Configuração e seed de dados
 └── appsettings.json      # Configurações (connection string, etc.)
-🔮 Próximos Passos (Melhorias Futuras)
+
+Melhorias Futuras
 □ Implementar autenticação com JWT para proteger endpoints.
 □ Separar a lógica de negócio em uma camada de Services.
 □ Adicionar testes unitários com xUnit.
